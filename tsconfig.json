@@ -5,13 +5,18 @@
     "lib": ["es5", "es6"],
     "target": "es6",
     "module": "commonjs",
+    "baseUrl": "src",
     "sourceMap": true,
   
     "strict": true,
     "noImplicitAny": false,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noImplicitReturns": true
+    "noImplicitReturns": true,
+    "strictPropertyInitialization": false,
+
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
   },
   "include": [
     "./src/**/*"
