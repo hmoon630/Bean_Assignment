@@ -4,8 +4,8 @@
   "description": "This is for Beansil front assignment",
   "main": "index.js",
   "scripts": {
-    "start": "cross-env NODE_PATH=src babel-node src/index.js",
-    "dev": "cross-env NODE_PATH=src nodemon --exec babel-node src/index.js"
+    "start": "cross-env NODE_PATH=src ts-node src/index.ts",
+    "dev": "cross-env NODE_PATH=src nodemon --exec ts-node src/index.ts"
   },
   "repository": "https://github.com/hmoon630/Bean_API.git",
   "author": "hmoon630 <s19017@gsm.hs.kr>",
@@ -30,6 +30,9 @@
     "sequelize-typescript": "^1.1.0"
   },
   "devDependencies": {
-    "@types/node": "^13.1.2"
+    "@types/node": "^13.1.2",
+    "nodemon": "^2.0.2",
+    "ts-node": "^8.5.4",
+    "typescript": "^3.7.4"
   }
 }

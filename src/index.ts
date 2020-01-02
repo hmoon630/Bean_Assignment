@@ -1,11 +1,11 @@
 import * as dotenv from 'dotenv';
 dotenv.config()
 
-import Koa from 'koa';
-import helmet from 'koa-helmet'; 
-import cors from '@koa/cors';
-import logger from 'koa-logger';
-import bodyParser from 'koa-bodyparser';
+import * as Koa from 'koa';
+import * as helmet from 'koa-helmet'; 
+import * as cors from '@koa/cors';
+import * as logger from 'koa-logger';
+import * as bodyParser from 'koa-bodyparser';
 
 import { router } from './router';
 
