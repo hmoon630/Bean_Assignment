@@ -8,6 +8,8 @@ import * as logger from 'koa-logger';
 import * as bodyParser from 'koa-bodyparser';
 
 import { router } from './router';
+import { sequelize } from 'models';
+sequelize.sync();
 
 const app = new Koa();
 const port = process.env.PORT || 4000;
