@@ -7,6 +7,7 @@ import * as cors from '@koa/cors';
 import * as logger from 'koa-logger';
 import * as bodyParser from 'koa-bodyparser';
 
+import { errorHandler } from 'middlewares/error-handler';
 import { router } from './router';
 import { sequelize } from 'models';
 sequelize.sync();
@@ -16,6 +17,7 @@ const port = process.env.PORT || 4000;
 
 app.use(helmet())
     .use(cors())
+    .use(errorHandler())
     .use(logger())
     .use(bodyParser())
     .use(router.routes()).use(router.allowedMethods())
