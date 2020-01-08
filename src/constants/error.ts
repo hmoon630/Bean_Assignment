@@ -9,3 +9,9 @@ export const EXISTING_ID = {
     code : '001',
     message : '이미 존재하는 아이디입니다.'
 }
+
+export const INVALID_ACCOUNT = {
+    statusCode: 422,
+    code: '002',
+    message: '아이디나 패스워드가 올바르지 않습니다.'
+}
