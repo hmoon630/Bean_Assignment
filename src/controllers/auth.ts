@@ -5,9 +5,10 @@ dotenv.config();
 
 import { User } from 'models';
 import {
-    INVALID_REQUEST_BODY_FORMAT, EXISTING_ID
+    INVALID_REQUEST_BODY_FORMAT, EXISTING_ID, INVALID_ACCOUNT
 } from 'constants/error';
 import * as crypto from 'crypto';
+import { generateToken } from 'lib/token';
 
 export const Register = async (ctx: Koa.Context) => {
     const bodyFormat = Joi.object().keys({
@@ -44,3 +45,35 @@ export const Register = async (ctx: Koa.Context) => {
     }
 }
 
+export const Login = async (ctx : Koa.Context) => {
+    const bodyFormat = Joi.object().keys({
+        id: Joi.string().min(5).max(20).required(),
+        password: Joi.string().min(8).max(30).required()
+    })
+
+    const joiError = Joi.validate(ctx.request.body, bodyFormat);
+
+    if (joiError.error) {
+        throw INVALID_REQUEST_BODY_FORMAT;
+    }
+
+    const password = await crypto.createHmac('sha256', String(process.env.PASSWORD_KEY)).update(ctx.request.body.password).digest('hex');
+
+    const account = await User.findOne({
+        where: {
+            id: ctx.request.body.id,
+            password: password
+        }
+    })
+
+    if (!account) {
+        throw INVALID_ACCOUNT;
+    }
+    
+    const token = await generateToken(account.id);
+
+    ctx.status = 200;
+    ctx.body = {
+        "token" : token
+    }
+}
