@@ -5,15 +5,13 @@ dotenv.config();
 
 const jwtSecret = process.env.JWT_KEY;
 
-export const generateToken = (payload) => {
+export const generateToken = (payload : string) => {
     return new Promise(
         (resolve, reject) => {
             jwt.sign(
                 payload,
                 jwtSecret,
-                {
-                    expiresIn: '7d'
-                }, (error, token) => {
+                (error, token) => {
                     if (error) reject(error);
                     resolve(token);
                 }
@@ -22,7 +20,7 @@ export const generateToken = (payload) => {
     );
 }
 
-export const decodeToken = (token) => {
+export const decodeToken = (token : string) => {
     return new Promise(
         (resolve, reject) => {
             jwt.verify(token, jwtSecret, (error, decoded) => {
