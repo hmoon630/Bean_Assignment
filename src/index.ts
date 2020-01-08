@@ -17,8 +17,8 @@ const port = process.env.PORT || 4000;
 
 app.use(helmet())
     .use(cors())
-    .use(errorHandler())
     .use(logger())
+    .use(errorHandler())
     .use(bodyParser())
     .use(router.routes()).use(router.allowedMethods())
 
