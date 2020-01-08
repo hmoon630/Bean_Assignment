@@ -5,10 +5,10 @@ dotenv.config();
 
 import { User } from 'models';
 import {
-    INVALID_REQUEST_BODY_FORMAT, EXISTING_ID, INVALID_ACCOUNT
+    INVALID_REQUEST_BODY_FORMAT, EXISTING_ID, INVALID_ACCOUNT, AUTH_REQUIRED, INVALID_TOKEN
 } from 'constants/error';
 import * as crypto from 'crypto';
-import { generateToken } from 'lib/token';
+import { generateToken, decodeToken } from 'lib/token';
 
 export const Register = async (ctx: Koa.Context) => {
     const bodyFormat = Joi.object().keys({
@@ -75,5 +75,26 @@ export const Login = async (ctx : Koa.Context) => {
     ctx.status = 200;
     ctx.body = {
         "token" : token
+    }
+}
+
+export const checkUser = async (ctx : Koa.Context) => {
+    const token : string = ctx.header.token;
+
+    if (!token) {
+        throw AUTH_REQUIRED;
+    }
+
+    let resolved : string;
+
+    try {
+        resolved = String(await decodeToken(token));
+    } catch (error) {
+        throw INVALID_TOKEN;
+    }
+
+    ctx.status = 200;
+    ctx.body = {
+        "id" : resolved
     }
 }
