@@ -1,15 +1,15 @@
 import * as dotenv from 'dotenv';
-dotenv.config()
+dotenv.config();
 
-import * as Koa from 'koa';
-import * as helmet from 'koa-helmet'; 
 import * as cors from '@koa/cors';
-import * as logger from 'koa-logger';
+import * as Koa from 'koa';
 import * as bodyParser from 'koa-bodyparser';
+import * as helmet from 'koa-helmet';
+import * as logger from 'koa-logger';
 
 import { errorHandler } from 'middlewares/error-handler';
-import { router } from './router';
 import { sequelize } from 'models';
+import { router } from './router';
 sequelize.sync();
 
 const app = new Koa();
@@ -20,8 +20,8 @@ app.use(helmet())
     .use(logger())
     .use(errorHandler())
     .use(bodyParser())
-    .use(router.routes()).use(router.allowedMethods())
+    .use(router.routes()).use(router.allowedMethods());
 
 app.listen(port, () => {
     console.log(`Bean API Server Started.. with port ${port}`);
-})
+});

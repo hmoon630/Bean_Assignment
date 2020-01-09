@@ -1,20 +1,20 @@
-import * as Koa from 'koa';
+import * as dotenv from 'dotenv';
 import * as Joi from 'joi';
-import * as dotenv from 'dotenv'
+import * as Koa from 'koa';
 dotenv.config();
 
-import { User } from 'models';
 import {
-    INVALID_REQUEST_BODY_FORMAT, EXISTING_ID, INVALID_ACCOUNT, AUTH_REQUIRED, INVALID_TOKEN
+    AUTH_REQUIRED, EXISTING_ID, INVALID_ACCOUNT, INVALID_REQUEST_BODY_FORMAT, INVALID_TOKEN,
 } from 'constants/error';
 import * as crypto from 'crypto';
-import { generateToken, decodeToken } from 'lib/token';
+import { decodeToken, generateToken } from 'lib/token';
+import { User } from 'models';
 
 export const Register = async (ctx: Koa.Context) => {
     const bodyFormat = Joi.object().keys({
         id : Joi.string().min(5).max(20).required(),
-        password : Joi.string().min(8).max(30).required()
-    })
+        password : Joi.string().min(8).max(30).required(),
+    });
 
     const joiError = Joi.validate(ctx.request.body, bodyFormat);
 
@@ -24,9 +24,9 @@ export const Register = async (ctx: Koa.Context) => {
 
     const account = await User.findOne({
         where: {
-            id: ctx.request.body.id
-        }
-    })
+            id: ctx.request.body.id,
+        },
+    });
 
     if (account) {
         throw EXISTING_ID;
@@ -36,20 +36,20 @@ export const Register = async (ctx: Koa.Context) => {
 
     await User.create({
         id : ctx.request.body.id,
-        password : password
+        password,
     });
-    
+
     ctx.status = 200;
     ctx.body = {
-        "id" : ctx.request.body.id
-    }
-}
+        id : ctx.request.body.id,
+    };
+};
 
-export const Login = async (ctx : Koa.Context) => {
+export const Login = async (ctx: Koa.Context) => {
     const bodyFormat = Joi.object().keys({
         id: Joi.string().min(5).max(20).required(),
-        password: Joi.string().min(8).max(30).required()
-    })
+        password: Joi.string().min(8).max(30).required(),
+    });
 
     const joiError = Joi.validate(ctx.request.body, bodyFormat);
 
@@ -62,30 +62,30 @@ export const Login = async (ctx : Koa.Context) => {
     const account = await User.findOne({
         where: {
             id: ctx.request.body.id,
-            password: password
-        }
-    })
+            password,
+        },
+    });
 
     if (!account) {
         throw INVALID_ACCOUNT;
     }
-    
+
     const token = await generateToken(account.id);
 
     ctx.status = 200;
     ctx.body = {
-        "token" : token
-    }
-}
+        token,
+    };
+};
 
-export const checkUser = async (ctx : Koa.Context) => {
-    const token : string = ctx.header.token;
+export const checkUser = async (ctx: Koa.Context) => {
+    const token: string = ctx.header.token;
 
     if (!token) {
         throw AUTH_REQUIRED;
     }
 
-    let resolved : string;
+    let resolved: string;
 
     try {
         resolved = String(await decodeToken(token));
@@ -95,6 +95,6 @@ export const checkUser = async (ctx : Koa.Context) => {
 
     ctx.status = 200;
     ctx.body = {
-        "id" : resolved
-    }
-}
+        id : resolved,
+    };
+};
